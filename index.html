@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Get your WhatsApp Business API solution with SRLines - Pakistan's first Meta Verified Tech Provider. Free 10-day trial available.">
+  <title>WhatsApp Cloud API Solution | SRLines - Meta Verified Provider</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #25D366;
+      --secondary-color: #128C7E;
+      --dark-color: #075E54;
+      --light-color: #DCF8C6;
+      --white: #ffffff;
+      --gray-light: #f5f5f5;
+      --gray-medium: #e0e0e0;
+      --gray-dark: #333333;
+      --shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      padding: 20px;
+      color: var(--white);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    h1, h2, h3 {
+      color: var(--white);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    }
+    
+    h2 {
+      font-size: 2rem;
+    }
+    
+    .content-section {
+      background-color: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+      color: var(--gray-dark);
+    }
+    
+    .intro-text {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+    
+    .benefit-card {
+      background-color: var(--white);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .benefit-card h3 {
+      color: var(--dark-color);
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      padding: 15px 30px;
+      background: var(--white);
+      color: var(--primary-color);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 10px 0;
+    }
+    
+    .cta-button:hover {
+      background: var(--primary-color);
+      color: var(--white);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .message-box {
+      margin-top: 30px;
+      padding: 25px;
+      background: var(--white);
+      color: var(--gray-dark);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    
+    .message-box h3 {
+      color: var(--primary-color);
+    }
+    
+    .message-box a {
+      color: var(--secondary-color);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .message-box a:hover {
+      color: var(--dark-color);
+      text-decoration: underline;
+    }
+    
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      max-width: 100%;
+      background: #000;
+      margin: 30px auto;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .video-caption {
+      margin: 15px 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--white);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+    
+    #signupDetails {
+      margin-top: 15px;
+      padding: 15px;
+      background: var(--gray-light);
+      border-radius: 5px;
+      color: var(--gray-dark);
+      font-family: 'Courier New', monospace;
+      text-align: left;
+      display: none;
+    }
+    
+    .copy-field {
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--gray-light);
+      padding: 12px 15px;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .copy-field label {
+      font-weight: 600;
+      margin-right: 15px;
+      color: var(--secondary-color);
+    }
+    
+    .copy-field .value {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .copy-btn {
+      background: var(--primary-color);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      margin-left: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+    
+    .copy-btn:hover {
+      background: var(--secondary-color);
+    }
+    
+    .calendar-container {
+      margin: 40px 0;
+      text-align: center;
+    }
+    
+    .calendar-container h2 {
+      color: var(--white);
+    }
+    
+    /* Modal styles for Calendly */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+    
+    .modal-content {
+      position: relative;
+      background-color: var(--white);
+      margin: 5% auto;
+      padding: 0;
+      width: 95%;
+      max-width: 800px;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 80vh;
+    }
+    
+    .close {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      color: var(--gray-dark);
+      font-size: 28px;
+      font-weight: bold;
+      z-index: 10000;
+      cursor: pointer;
+    }
+    
+    .close:hover {
+      color: var(--primary-color);
+    }
+    
+    .calendly-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Thank You Section */
+    #thankyou {
+      scroll-margin-top: 100px;
+    }
+    
+    .thank-you-message {
+      display: none;
+      background-color: var(--white);
+      color: var(--dark-color);
+      padding: 30px;
+      border-radius: 10px;
+      margin: 40px 0;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    
+    .thank-you-message h2 {
+      color: var(--primary-color);
+    }
+    
+    .thank-you-icon {
+      font-size: 4rem;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+    
+    /* Footer styles */
+    .footer {
+      background-color: rgba(0,0,0,0.2);
+      padding: 30px 0;
+      margin-top: 40px;
+      border-radius: 10px;
+    }
+    
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    .footer-section {
+      flex: 1;
+      min-width: 250px;
+      margin-bottom: 20px;
+      padding: 0 15px;
+    }
+    
+    .footer-section h3 {
+      color: var(--white);
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+    
+    .footer-section p, .footer-section a {
+      color: var(--light-color);
+      margin-bottom: 10px;
+      display: block;
+      text-decoration: none;
+    }
+    
+    .footer-section a:hover {
+      color: var(--white);
+      text-decoration: underline;
+    }
+    
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: 20px;
+    }
+    
+    .whatsapp-widget {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 9999;
+      transition: all 0.3s ease;
+    }
+    
+    .whatsapp-button {
+      width: 60px;
+      height: 60px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+    
+    .whatsapp-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+    }
+    
+    .whatsapp-button img {
+      width: 36px;
+      height: 36px;
+    }
+    
+    .whatsapp-tooltip {
+      position: absolute;
+      right: 70px;
+      bottom: 15px;
+      background-color: var(--white);
+      color: var(--gray-dark);
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+    .whatsapp-button:hover + .whatsapp-tooltip {
+      opacity: 1;
+      visibility: visible;
+      width: auto;
+      padding: 8px 12px;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .content-section {
+        padding: 20px;
+      }
+      
+      .modal-content {
+        margin: 2% auto;
+        width: 98%;
+        height: 90vh;
+      }
+      
+      .footer-section {
+        flex: 100%;
+      }
+      
+      .whatsapp-widget {
+        bottom: 20px;
+        right: 20px;
+      }
+      
+      .whatsapp-button {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .whatsapp-button img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>WhatsApp Business API Solution</h1>
+      <h2>Pakistan's First Meta Verified Tech Provider</h2>
+    </div>
+    
+    <div class="content-section">
+      <p class="intro-text">
+        Are you facing repeated bans on your WhatsApp Business account? 😰<br>
+        Struggling with high chat volumes that crash your system?<br>
+        Tired of manually responding to every message?<br><br>
+        Your solution is here!
+      </p>
+      
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <h3>✅ Meta Verified</h3>
+          <p>Official WhatsApp Business Solution Provider with direct Meta verification for reliable service.</p>
+        </div>
+        
+        <div class="benefit-card">
+          <h3>🔄 Number Migration</h3>
+          <p>Use your existing WhatsApp number with our Cloud API - no need to change numbers.</p>
+        </div>
+        
+        <div class="benefit-card">
+          <h3>💼 Powerful CRM</h3>
+          <p>Tag, comment, and assign conversations to agents - never miss a lead again!</p>
+        </div>
+        
+        <div class="benefit-card">
+          <h3>🆓 Free Trial</h3>
+          <p>10 days completely free to test our solution with your business workflows.</p>
+        </div>
+      </div>
+      
+      <div style="text-align: center;">
+        <button data-facebook-login-btn class="cta-button">Start WhatsApp Setup Wizard</button>
+      </div>
+      
+      <div id="successMessage" class="message-box">
+        <h3>🎉 Congratulations!</h3>
+        <p>Your WhatsApp Cloud API credentials:</p>
+        
+        <div class="copy-field">
+          <label>WhatsApp business account ID:</label>
+          <span class="value" id="waba-id-field">$waba_id</span>
+          <button class="copy-btn" onclick="copyToClipboard('waba-id-field')">Copy</button>
+        </div>
+        
+        <div id="signupDetails"></div>
+        <p>As the next step, please visit: <br>
+          <a href="https://app.whatsell.ai/user" target="_blank">https://app.whatsell.ai/user</a><br>
+          to Signup/Login and enter above credentials into respective fields.</p>
+      </div>
+    </div>
+    
+    <div class="calendar-container">
+      <h2>Book a Free Demonstration</h2>
+      <button id="bookDemoBtn" class="cta-button">Schedule a 30-Minute Demo</button>
+    </div>
+    
+    <!-- Thank You Section -->
+    <div id="thankyou" class="thank-you-message">
+      <div class="thank-you-icon">✓</div>
+      <h2>Thank You for Booking a Demo!</h2>
+      <p>We've sent the meeting details to your email. Looking forward to connecting with you.</p>
+      <p>Need immediate help? <a href="https://wa.me/971504334829" target="_blank">Chat on WhatsApp</a></p>
+    </div>
+    
+    <!-- Calendly Modal -->
+    <div id="calendlyModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <iframe class="calendly-iframe" src="https://calendly.com/shahidjalally/30min" frameborder="0"></iframe>
+      </div>
+    </div>
+    
+    <div class="content-section">
+      <div class="video-caption">How to create a WhatsApp Cloud API account - Watch our tutorial</div>
+      <div class="video-container">
+        <iframe width="560" height="315"
+          src="https://www.youtube.com/embed/c3Lch84AEds"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+    
+    <!-- Footer Section -->
+    <div class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>About Us</h3>
+          <p>SRLines is Pakistan's first Meta Verified Tech Provider specializing in WhatsApp Business solutions.</p>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <a href="https://signup.whatsell.ai" target="_blank">Cloud API Signup</a>
+          <a href="https://app.whatsell.ai/user" target="_blank">CRM Login</a>
+          <a href="#" id="bookDemoFooterBtn">Book Demo</a>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <a href="/cdn-cgi/l/email-protection#e2818d8c96838196a291908e8b8c8791cc8c8796"><span class="__cf_email__" data-cfemail="77141819031614033704051b1e19120459191203">[email&#160;protected]</span></a>
+          <a href="tel:+923283897926">+92 328 3897926</a>
+          <p>Sadiqabad, Punjab, Pakistan</p>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2023 SRLines. All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+  
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+  <script src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <script>
+    // Calendly Modal Functionality
+    const modal = document.getElementById("calendlyModal");
+    const btn = document.getElementById("bookDemoBtn");
+    const footerBtn = document.getElementById("bookDemoFooterBtn");
+    const span = document.getElementsByClassName("close")[0];
+    const thankYouSection = document.getElementById("thankyou");
+
+    // Function to show thank-you message
+    function showThankYou() {
+      thankYouSection.style.display = 'block';
+      window.location.hash = '#thankyou';
+      thankYouSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Check URL for thank-you anchor on page load
+    window.addEventListener('load', function() {
+      if(window.location.hash === '#thankyou') {
+        showThankYou();
+      }
+    });
+
+    // Listen for Calendly events
+    window.addEventListener('message', function(e) {
+      if(e.data.event && e.data.event === 'calendly.event_scheduled') {
+        modal.style.display = "none";
+        showThankYou();
+      }
+    });
+
+    btn.onclick = function() {
+      modal.style.display = "block";
+      document.querySelector('.calendly-iframe').src = "https://calendly.com/shahidjalally/30min";
+    }
+    
+    footerBtn.onclick = function() {
+      modal.style.display = "block";
+      document.querySelector('.calendly-iframe').src = "https://calendly.com/shahidjalally/30min";
+    }
+    
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    
+    // Existing JavaScript
+    window.addEventListener("message", sessionInfoListener);
+    const button = document.querySelector("[data-facebook-login-btn]");
+    button.addEventListener("click", launchWhatsAppSignup);
+
+    function sessionInfoListener(event) {
+        // First check if the origin is facebook.com
+        if (event.origin !== "https://www.facebook.com") return;
+        
+        try {
+            console.log("event.data", event.data);
+            const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+            const { phone_number_id, waba_id, business_id } = data.data;
+            console.log(`Phone number ID: ${phone_number_id}, WABA ID: ${waba_id}, Business ID: ${business_id}`);        
+            if (waba_id) {
+                // Update the field
+                document.getElementById('waba-id-field').textContent = waba_id;
+                      
+                // Show the success message
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+                      
+                // Also show the signup details if needed
+                document.getElementById('signupDetails').style.display = 'block';
+            }
+        } catch (e) {
+            console.log("Error processing message:", e);
+            console.log("Non JSON Response", event.data);
+        }
+    }
+
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = element.nextElementSibling;
+            btn.textContent = 'Copied!';
+            setTimeout(() => {
+                btn.textContent = 'Copy';
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: "6673587296096434",
+            xfbml: false,
+            version: "v23.0",
+            cookie: true,
+            status: true
+        });
+    };
+
+    function signupResponseCallback(response) {
+        console.log("response", response);
+        if (response.authResponse) {
+            const code = response.authResponse.code;
+            console.log("auth code", code);
+        } else {
+            console.log("User cancelled login or did not fully authorize.");
+        }
+    }
+
+    function launchWhatsAppSignup() {
+        FB.login(signupResponseCallback, {
+            config_id: "1148059857348036",
+            response_type: "code",
+            override_default_response_type: true,
+            extras: {
+                setup: {},
+                featureType: "whatsapp_business_app_onboarding",
+                sessionInfoVersion: "3"
+            },
+            scope: "business_management,whatsapp_business_management,whatsapp_business_messaging,public_profile"
+        });
+    }
+
+  <!-- Facebook Pixel Code -->
+  <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1426121475411111');
+      fbq('track', 'PageView');
+      fbq('track', 'ViewContent');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1426121475492328&ev=PageView&noscript=1"
+      src="https://www.facebook.com/tr?id=1426121475492328&ev=ViewContent&noscript=1"
+  /></noscript>
+  <!-- End Facebook Pixel Code -->
+  
+  <!-- Calendly Script -->
+  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+  
+  <div class="whatsapp-widget">
+      <a href="https://wa.me/971504334829?text=Hi" class="whatsapp-button" target="_blank" rel="noopener noreferrer">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+      </a>
+      <div class="whatsapp-tooltip">Chat with us on WhatsApp</div>
+  </div>        
+</body>
+</html>
