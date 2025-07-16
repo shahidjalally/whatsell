@@ -603,9 +603,6 @@
       thankYouSection.style.display = 'block';
       window.location.hash = '#thankyou';
       thankYouSection.scrollIntoView({ behavior: 'smooth' });
-      
-      // Fire Meta Conversion Event for successful booking
-      fireMetaLeadEvent();
     }
 
     // Check URL for thank-you anchor on page load
@@ -626,13 +623,11 @@
     btn.onclick = function() {
       modal.style.display = "block";
       document.querySelector('.calendly-iframe').src = "https://calendly.com/xpertgroupme/30min";
-      fireMetaLeadEvent();
     }
     
     footerBtn.onclick = function() {
       modal.style.display = "block";
       document.querySelector('.calendly-iframe').src = "https://calendly.com/xpertgroupme/30min";
-      fireMetaLeadEvent();
     }
     
     span.onclick = function() {
