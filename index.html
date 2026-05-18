@@ -466,10 +466,40 @@
         height: 30px;
       }
     }
+
+    .referrer-warning {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .referrer-warning .warning-box {
+      background: rgba(255,255,255,0.95);
+      color: var(--gray-dark);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      max-width: 680px;
+      width: 100%;
+      padding: 28px;
+    }
+
+    .referrer-warning h2 {
+      color: #d32f2f;
+      margin-bottom: 12px;
+    }
+
+    .referrer-warning a {
+      color: var(--secondary-color);
+      font-weight: 600;
+    }
+
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="mainContent">
     <div class="header">
       <h1>WhatsApp Business API Solution</h1>
       <h2>UAE's First Meta Verified Tech Provider</h2>
@@ -639,46 +669,6 @@
         modal.style.display = "none";
       }
     }
-    
-    // Function to fire Meta Lead event
-    async function fireMetaLeadEvent() {
-      try {
-        const payload = {
-          pixelId: '1111111111111111',
-          accessToken: 'EAALwBZBVJSZAgBO42LMioKD7dZB17ENvRFPONEflZCpNBVoZB6kdtaLkeWLLtjqd3vNsHS68CqCcd2KZBuglaoNGZA8Pi0Wdp1fqDOE60NFbN1dnSsb68vsZCfLf4AcWjevSHnOmstgtrcGb5HpjJ4DSrz3mh6OY748XniJ9rrODCZCz3vj5ZCfmodnvN2blI32Qzg5QZDZD',
-          eventName: 'Lead',
-          eventId: `lead_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-          eventSourceUrl: window.location.href,
-          userData: {
-            client_user_agent: navigator.userAgent,
-            client_ip_address: await fetch('https://api.ipify.org?format=json')
-              .then(res => res.json()).then(data => data.ip).catch(() => ''),
-            fbc: getFbcCookie(),
-            fbp: getFbpCookie()    
-          },
-          customData: {
-            content_name: 'Demo Booked',
-            content_category: 'Conversion',
-            currency: 'PKR',
-            value: 0
-          }
-        };
-
-        const response = await fetch(
-          'https://us-central1-onex-time-plus-static-website.cloudfunctions.net/sendMetaEvent',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          }
-        );
-
-        if (!response.ok) throw new Error(await response.text());
-        console.log('Meta Lead event sent:', await response.json());
-      } catch (error) {
-        console.error('Error sending Meta Lead event:', error);
-      }
-    }
 
     // Existing JavaScript
     window.addEventListener("message", sessionInfoListener);
@@ -760,160 +750,38 @@
         });
     }
 
-    // Meta Conversion API Helper Functions
-    function getFbcCookie() {
-        const match = document.cookie.match(/_fbc=([^;]+)/);
-        if (!match) return undefined;
-        
-        const fbcValue = match[1];
-        const fbcPattern = /^fb\.([0-9]+)\.([0-9]+)(\.[0-9]+)?(\.[a-zA-Z0-9_\-]+)*$/i;
-        
-        if (!fbcPattern.test(fbcValue)) {
-            console.warn('Invalid FBC format detected:', fbcValue);
-            return undefined;
+    function enforceReferrerPolicy() {
+        const allowedReferrerHost = 'app.whatsell.ai';
+        const referrer = document.referrer;
+        let isAllowed = false;
+
+        if (referrer) {
+            try {
+                const referrerHost = new URL(referrer).hostname.toLowerCase();
+                isAllowed = referrerHost === allowedReferrerHost;
+            } catch (error) {
+                isAllowed = false;
+            }
         }
-        
-        const segments = fbcValue.split('.');
-        const timestamp = parseInt(segments[2]);
-        const twentyFourHoursAgo = Date.now() - (24 * 60 * 60 * 1000);
-        if (timestamp < twentyFourHoursAgo / 1000) {
-            console.warn('Expired FBC value (older than 24 hours):', fbcValue);
-            return undefined;
-        }
-        
-        return fbcValue;
-    }
 
-    function getFbpCookie() {
-        const match = document.cookie.match(/_fbp=([^;]+)/);
-        return match ? match[1] : undefined;
-    }
-    
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', () => {
-        // Call Meta event handlers
-        handleMetaPageViewEvent({
-            title: '',
-            type: 'product_page'
-        }).then(response => {
-            console.log('PageView event successful:', response);
-        }).catch(error => {
-            console.error('PageView event failed:', error);
-        });
-        
-        handleMetaViewContentEvent({
-            productId: '',
-            price: '',
-            name: ''
-        }).then(response => {
-            console.log('ViewContent event successful:', response);
-        }).catch(error => {
-            console.error('ViewContent event failed:', error);
-        });
-    });
+        if (!isAllowed) {
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent) mainContent.style.display = 'none';
 
-    // Meta Conversion API - PageView Event Handler
-    async function handleMetaPageViewEvent(pageData) {
-        try {
-            const payload = {
-                pixelId: '1111111111111111',
-                accessToken: 'EAALwBZBVJSZAgBO42LMioKD7dZB17ENvRFPONEflZCpNBVoZB6kdtaLkeWLLtjqd3vNsHS68CqCcd2KZBuglaoNGZA8Pi0Wdp1fqDOE60NFbN1dnSsb68vsZCfLf4AcWjevSHnOmstgtrcGb5HpjJ4DSrz3mh6OY748XniJ9rrODCZCz3vj5ZCfmodnvN2blI32Qzg5QZDZD',
-                eventName: 'PageView',
-                eventId: `page_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-                eventSourceUrl: window.location.href,
-                userData: {
-                    client_user_agent: navigator.userAgent,
-                    client_ip_address: await fetch('https://api.ipify.org?format=json')
-                        .then(res => res.json()).then(data => data.ip).catch(() => ''),
-                    fbc: getFbcCookie(),
-                    fbp: getFbpCookie()    
-                },
-                customData: {
-                    page_title: pageData?.title || document.title,
-                    page_url: window.location.href,
-                    page_type: pageData?.type || 'unknown'
-                }
-            };
-
-            const response = await fetch(
-                'https://us-central1-onex-time-plus-static-website.cloudfunctions.net/sendMetaEvent',
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                }
-            );
-
-            if (!response.ok) throw new Error(await response.text());
-            return await response.json();
-        } catch (error) {
-            console.error('PageView Error:', error);
-            throw error;
+            const warning = document.createElement('div');
+            warning.className = 'referrer-warning';
+            warning.innerHTML = `
+                <div class="warning-box">
+                    <h2>Access Restricted</h2>
+                    <p>Please visit <a href="https://app.whatsell.ai" target="_blank" rel="noopener noreferrer">https://app.whatsell.ai</a>, then go to Dashboard → User Menu → Meta API Keys and click on WhatsApp Signup.</p>
+                </div>
+            `;
+            document.body.appendChild(warning);
         }
     }
 
-    // Meta Conversion API - ViewContent Event Handler
-    async function handleMetaViewContentEvent(productData) {
-        try {
-            const payload = {
-                pixelId: '1111111111111111',
-                accessToken: 'EAALwBZBVJSZAgBO42LMioKD7dZB17ENvRFPONEflZCpNBVoZB6kdtaLkeWLLtjqd3vNsHS68CqCcd2KZBuglaoNGZA8Pi0Wdp1fqDOE60NFbN1dnSsb68vsZCfLf4AcWjevSHnOmstgtrcGb5HpjJ4DSrz3mh6OY748XniJ9rrODCZCz3vj5ZCfmodnvN2blI32Qzg5QZDZD',
-                eventName: 'ViewContent',
-                eventId: `view_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-                eventSourceUrl: window.location.href,
-                userData: {
-                    client_user_agent: navigator.userAgent,
-                    client_ip_address: await fetch('https://api.ipify.org?format=json')
-                        .then(res => res.json()).then(data => data.ip).catch(() => ''),
-                    fbc: getFbcCookie(),
-                    fbp: getFbpCookie()    
-                },
-                customData: {
-                    content_ids: 'whatsapp-cloud-api',
-                    content_name: 'whatsapp-cloud-api',
-                    content_type: 'whatsapp-cloud-api',
-                    currency: 'PKR',
-                    value: '0'
-                }
-            };
-
-            const response = await fetch(
-                'https://us-central1-onex-time-plus-static-website.cloudfunctions.net/sendMetaEvent',
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                }
-            );
-
-            if (!response.ok) throw new Error(await response.text());
-            return await response.json();
-        } catch (error) {
-            console.error('ViewContent Error:', error);
-            throw error;
-        }
-    }
+    document.addEventListener('DOMContentLoaded', enforceReferrerPolicy);
   </script>
-  
-  <!-- Facebook Pixel Code -->
-  <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '1111111111111111');
-      fbq('track', 'PageView');
-      fbq('track', 'ViewContent');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=1111111111111111&ev=PageView&noscript=1"
-      src="https://www.facebook.com/tr?id=1111111111111111&ev=ViewContent&noscript=1"
-  /></noscript>
-  <!-- End Facebook Pixel Code -->
   
   <!-- Calendly Script -->
   <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
