@@ -602,6 +602,7 @@
     let currentWabaId = '';
     let currentPhoneNumberId = '';
     let currentBusinessId = '';
+    let currentAuthCode = '';
 
     // Flag to track if onboarding FINISH event was received with valid waba_id
     let onboardingCompletedSuccessfully = false;
@@ -699,7 +700,7 @@
     }
 
     // Save to backend and then show final success
-    function saveToBackend(waba_id, phone_number_id, business_id) {
+    function saveToBackend(waba_id, phone_number_id, business_id, code) {
       if (!authToken) {
         console.error("No auth token found");
         // Still show success? We'll show success but without backend confirmation? better to show warning?
@@ -720,7 +721,8 @@
         body: JSON.stringify({
           waba_id: waba_id,
           business_account_id: business_id,
-          business_phone_number_id: phone_number_id
+          business_phone_number_id: phone_number_id,
+          code: code
         })
       })
       .then(r => {
@@ -811,7 +813,8 @@
     // Signup Response Callback
     function signupResponseCallback(response) {
       if (response.authResponse && response.authResponse.code) {
-        console.log("Onboarding started with code:", response.authResponse.code);
+        currentAuthCode = response.authResponse.code;
+        console.log("Onboarding started with code:", currentAuthCode);
         // The session info will come via postMessage
         // Waiting message is already shown
       } else {
@@ -877,7 +880,7 @@
       showWaitingMessage('⏳ Almost there! Syncing with CRM Platform...');
 
       // Save to backend – upon success, final success div will appear
-      saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId);
+      saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId, currentAuthCode);
     }
 
     // Copy to Clipboard
