@@ -12,6 +12,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <script>
+    (() => {
+      try {
+        const referrer = new URL(document.referrer);
+        if (referrer.hostname === 'app.whatsell.ai') {
+          document.documentElement.classList.add('authorized-referrer');
+        }
+      } catch (error) {
+        // Missing or invalid referrers are treated as direct access.
+      }
+    })();
+  </script>
   <style>
     :root {
       --primary-green: #25D366;
@@ -50,6 +62,44 @@
       color: var(--white);
       padding: 20px;
       position: relative;
+    }
+
+    .container.protected-content {
+      display: none;
+    }
+
+    .access-blocker {
+      width: 100%;
+      max-width: 520px;
+      padding: 36px 28px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.98);
+      color: var(--dark-gray);
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+    }
+
+    .access-blocker h1 {
+      margin-bottom: 16px;
+      color: var(--warning-red);
+      font-size: 1.65rem;
+    }
+
+    .access-blocker p {
+      line-height: 1.7;
+    }
+
+    .access-blocker a {
+      color: var(--cta-blue);
+      font-weight: 700;
+    }
+
+    .authorized-referrer .container.protected-content {
+      display: flex;
+    }
+
+    .authorized-referrer .access-blocker {
+      display: none;
     }
 
     /* Info Message Box */
@@ -525,7 +575,16 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="access-blocker" role="alert">
+    <h1>Direct access is not permitted</h1>
+    <p>
+      Please first sign up at the CRM Portal at
+      <a href="https://app.whatsell.ai" target="_blank" rel="noopener noreferrer">https://app.whatsell.ai</a>
+      and follow the wizard from there.
+    </p>
+  </div>
+
+  <div class="container protected-content">
     <!-- WhatsApp Icon -->
     <div class="whatsapp-logo">
       <i class="fab fa-whatsapp"></i>
