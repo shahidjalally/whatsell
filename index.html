@@ -927,7 +927,7 @@
 
       // The Facebook SDK posts other messages to the page as well. Processing
       // those as signup completion events caused false "missing waba_id" errors.
-      if (message.type !== "WA_EMBEDDED_SIGNUP") return;
+      // if (message.type !== "WA_EMBEDDED_SIGNUP") return;
 
       if (message.event === "CANCEL" || message.event === "ERROR") {
         console.warn(`WhatsApp Embedded Signup ${message.event}`, message.data || {});
