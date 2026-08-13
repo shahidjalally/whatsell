@@ -662,6 +662,7 @@
     let currentPhoneNumberId = '';
     let currentBusinessId = '';
     let currentAuthCode = '';
+    let backendSaveStarted = false;
 
     // Flag to track if onboarding FINISH event was received with valid waba_id
     let onboardingCompletedSuccessfully = false;
@@ -845,6 +846,11 @@
         // Reset flags
         onboardingCompletedSuccessfully = false;
         backendSaveSuccess = false;
+        backendSaveStarted = false;
+        currentWabaId = '';
+        currentPhoneNumberId = '';
+        currentBusinessId = '';
+        currentAuthCode = '';
 
         // Clear previous watchdog
         if (onboardingWatchdog) clearTimeout(onboardingWatchdog);
@@ -884,8 +890,7 @@
       if (response.authResponse && response.authResponse.code) {
         console.log("Onboarding started with code:", response.authResponse.code);
         currentAuthCode = response.authResponse.code;
-        // The session info will come via postMessage
-        // Waiting message is already shown
+        saveWhenOnboardingDataIsReady();
       } else {
         console.log("Onboarding cancelled");
         // If user cancels immediately, remove waiting message and show warning? 
@@ -896,25 +901,11 @@
       }
     }
 
-    function waitForAuthCodeAndSave(maxWaitMs = 6000) {
-      const startedAt = Date.now();
+    function saveWhenOnboardingDataIsReady() {
+      if (backendSaveStarted || !currentWabaId || !currentAuthCode) return;
 
-      const trySave = () => {
-        if (currentAuthCode) {
-          saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId, currentAuthCode);
-          return;
-        }
-
-        if (Date.now() - startedAt >= maxWaitMs) {
-          // Continue without code for WhatsApp-only fallback
-          saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId, '');
-          return;
-        }
-
-        setTimeout(trySave, 200);
-      };
-
-      trySave();
+      backendSaveStarted = true;
+      saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId, currentAuthCode);
     }
 
     // Listen for session info from Facebook embedded wizard
@@ -934,9 +925,18 @@
         return;
       }
 
-      // 🔥 REQUIRED CHECKS
-      // if (message.type !== "WA_EMBEDDED_SIGNUP") return;
-      // if (message.event !== "FINISH") return;
+      // The Facebook SDK posts other messages to the page as well. Processing
+      // those as signup completion events caused false "missing waba_id" errors.
+      if (message.type !== "WA_EMBEDDED_SIGNUP") return;
+
+      if (message.event === "CANCEL" || message.event === "ERROR") {
+        console.warn(`WhatsApp Embedded Signup ${message.event}`, message.data || {});
+        if (onboardingWatchdog) clearTimeout(onboardingWatchdog);
+        showWarningMessage();
+        return;
+      }
+
+      if (message.event !== "FINISH") return;
 
       const data = message.data || {};
 
@@ -969,9 +969,9 @@
       // Show waiting message (don't close tab) while saving to backend
       showWaitingMessage('⏳ Almost there! Syncing with CRM Platform...');
 
-      // Save to backend – upon success, final success div will appear
-      // In some browsers/devices FINISH can arrive before code callback, so wait briefly for code.
-      waitForAuthCodeAndSave();
+      // FINISH and the OAuth callback can arrive in either order. Save exactly
+      // once, after both the WhatsApp IDs and a valid authorization code exist.
+      saveWhenOnboardingDataIsReady();
     }
 
     // Copy to Clipboard
