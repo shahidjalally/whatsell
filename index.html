@@ -737,6 +737,7 @@
     let currentWabaId = '';
     let currentPhoneNumberId = '';
     let currentBusinessId = '';
+    let currentAuthCode = '';
 
     // Flag to track if onboarding FINISH event was received with valid waba_id
     let onboardingCompletedSuccessfully = false;
@@ -834,7 +835,7 @@
     }
 
     // Save to backend and then show final success
-    function saveToBackend(waba_id, phone_number_id, business_id) {
+    function saveToBackend(waba_id, phone_number_id, business_id, code) {
       if (!authToken) {
         console.error("No auth token found");
         // Still show success? We'll show success but without backend confirmation? better to show warning?
@@ -855,7 +856,8 @@
         body: JSON.stringify({
           waba_id: waba_id,
           business_account_id: business_id,
-          business_phone_number_id: phone_number_id
+          business_phone_number_id: phone_number_id,
+          code: code
         })
       })
       .then(r => {
@@ -947,6 +949,7 @@
     function signupResponseCallback(response) {
       if (response.authResponse && response.authResponse.code) {
         console.log("Onboarding started with code:", response.authResponse.code);
+        currentAuthCode = response.authResponse.code;
         // The session info will come via postMessage
         // Waiting message is already shown
       } else {
@@ -957,6 +960,27 @@
         dynamicArea.innerHTML = '';
         if (onboardingWatchdog) clearTimeout(onboardingWatchdog);
       }
+    }
+
+    function waitForAuthCodeAndSave(maxWaitMs = 6000) {
+      const startedAt = Date.now();
+
+      const trySave = () => {
+        if (currentAuthCode) {
+          saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId, currentAuthCode);
+          return;
+        }
+
+        if (Date.now() - startedAt >= maxWaitMs) {
+          // Continue without code for WhatsApp-only fallback
+          saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId, '');
+          return;
+        }
+
+        setTimeout(trySave, 200);
+      };
+
+      trySave();
     }
 
     // Listen for session info from Facebook embedded wizard
@@ -1012,7 +1036,8 @@
       showWaitingMessage('⏳ Almost there! Syncing with CRM Platform...');
 
       // Save to backend – upon success, final success div will appear
-      saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId);
+      // In some browsers/devices FINISH can arrive before code callback, so wait briefly for code.
+      waitForAuthCodeAndSave();
     }
 
     // Copy to Clipboard
