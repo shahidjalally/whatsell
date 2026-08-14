@@ -11,120 +11,19 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="icon" href="https://signup.whatsell.ai/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <script>
-    (function () {
-      let isCrmReferrer = false;
-      let isCrmWebAppLaunch = false;
-
+    (() => {
       try {
-        const launchParams = new URLSearchParams(window.location.search);
-        isCrmWebAppLaunch = launchParams.get('source') === 'web_app'
-          && Boolean(launchParams.get('token'));
+        const referrer = new URL(document.referrer);
+        if (referrer.hostname === 'app.whatsell.ai') {
+          document.documentElement.classList.add('authorized-referrer');
+        }
       } catch (error) {
-        isCrmWebAppLaunch = false;
+        // Missing or invalid referrers are treated as direct access.
       }
-
-      try {
-        isCrmReferrer = new URL(document.referrer).hostname === 'app.whatsell.ai';
-      } catch (error) {
-        isCrmReferrer = false;
-      }
-
-      // The v2 frontend deliberately opens this page with `noreferrer`, so its
-      // explicit authenticated launch parameters are the referrer fallback.
-      if (!isCrmReferrer && !isCrmWebAppLaunch) {
-        document.documentElement.classList.add('unauthorized-referrer');
-      }
-    }());
+    })();
   </script>
-  <style>
-    .unauthorized-referrer body > :not(#direct-access-notice) {
-      display: none !important;
-    }
-
-    #direct-access-notice {
-      display: none;
-    }
-
-    .unauthorized-referrer #direct-access-notice {
-      display: flex;
-      width: 100%;
-      min-height: 100dvh;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
-      background: linear-gradient(135deg, #061c34, #0a5b83);
-      color: #172033;
-      font-family: Arial, sans-serif;
-    }
-
-    .access-notice__card {
-      width: min(100%, 680px);
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 20px;
-      background: #ffffff;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.32);
-    }
-
-    .access-notice__brand {
-      padding: 20px 24px;
-      background: #062f52;
-      color: #ffffff;
-      font-size: clamp(0.9rem, 3vw, 1.1rem);
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-align: center;
-    }
-
-    .access-notice__content {
-      padding: clamp(24px, 6vw, 40px);
-      text-align: center;
-    }
-
-    .access-notice__icon {
-      display: inline-flex;
-      width: 56px;
-      height: 56px;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      border-radius: 50%;
-      background: #fff3cd;
-      color: #a76500;
-      font-size: 1.8rem;
-    }
-
-    .access-notice__content h1 {
-      margin: 0 0 12px;
-      color: #062f52;
-      font-size: clamp(1.45rem, 5vw, 2.1rem);
-      line-height: 1.2;
-    }
-
-    .access-notice__content p {
-      margin: 0 auto 22px;
-      max-width: 540px;
-      color: #4a5568;
-      font-size: clamp(0.95rem, 3.5vw, 1.05rem);
-      line-height: 1.65;
-    }
-
-    .access-notice__video {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      border: 0;
-      border-radius: 12px;
-      background: #0b1724;
-    }
-
-    .access-notice__footer {
-      margin-top: 18px;
-      color: #64748b;
-      font-size: 0.8rem;
-    }
-  </style>
   <style>
     :root {
       --primary-green: #25D366;
@@ -163,6 +62,44 @@
       color: var(--white);
       padding: 20px;
       position: relative;
+    }
+
+    .container.protected-content {
+      display: none;
+    }
+
+    .access-blocker {
+      width: 100%;
+      max-width: 520px;
+      padding: 36px 28px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.98);
+      color: var(--dark-gray);
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+    }
+
+    .access-blocker h1 {
+      margin-bottom: 16px;
+      color: var(--warning-red);
+      font-size: 1.65rem;
+    }
+
+    .access-blocker p {
+      line-height: 1.7;
+    }
+
+    .access-blocker a {
+      color: var(--cta-blue);
+      font-weight: 700;
+    }
+
+    .authorized-referrer .container.protected-content {
+      display: flex;
+    }
+
+    .authorized-referrer .access-blocker {
+      display: none;
     }
 
     /* Info Message Box */
@@ -638,29 +575,16 @@
   </style>
 </head>
 <body>
-  <div id="direct-access-notice" role="alert" aria-labelledby="access-notice-title">
-    <section class="access-notice__card">
-      <div class="access-notice__brand">SRLINES SOFTWARE HOUSE (SMC-PRIVATE) LIMITED</div>
-      <div class="access-notice__content">
-        <div class="access-notice__icon" aria-hidden="true">!</div>
-        <h1 id="access-notice-title">This page is not directly accessible</h1>
-        <p>
-          For your security, please start the onboarding process from the CRM platform.
-          Follow the process explained in the video guide below.
-        </p>
-        <iframe
-          class="access-notice__video"
-          src="https://www.youtube-nocookie.com/embed/CvkFbvBebns"
-          title="SRLINES onboarding process video guide"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen>
-        </iframe>
-        <div class="access-notice__footer">SRLINES SOFTWARE HOUSE (SMC-PRIVATE) LIMITED</div>
-      </div>
-    </section>
+  <div class="access-blocker" role="alert">
+    <h1>Direct access is not permitted</h1>
+    <p>
+      Please first sign up at the CRM Portal at
+      <a href="https://app.whatsell.ai" target="_blank" rel="noopener noreferrer">https://app.whatsell.ai</a>
+      and follow the wizard from there.
+    </p>
   </div>
-  <div class="container">
+
+  <div class="container protected-content">
     <!-- WhatsApp Icon -->
     <div class="whatsapp-logo">
       <i class="fab fa-whatsapp"></i>
@@ -737,6 +661,8 @@
     let currentWabaId = '';
     let currentPhoneNumberId = '';
     let currentBusinessId = '';
+    let currentPageId = '';
+    let currentInstaId = '';
     let currentAuthCode = '';
 
     // Flag to track if onboarding FINISH event was received with valid waba_id
@@ -835,7 +761,7 @@
     }
 
     // Save to backend and then show final success
-    function saveToBackend(waba_id, phone_number_id, business_id, code) {
+    function saveToBackend(waba_id, phone_number_id, page_id, insta_acc_id, business_id, code) {
       if (!authToken) {
         console.error("No auth token found");
         // Still show success? We'll show success but without backend confirmation? better to show warning?
@@ -857,6 +783,8 @@
           waba_id: waba_id,
           business_account_id: business_id,
           business_phone_number_id: phone_number_id,
+		  page_id: page_id,
+		  insta_acc_id: insta_acc_id,
           code: code
         })
       })
@@ -866,6 +794,16 @@
       })
       .then(data => {
         console.log("✅ Saved to backend:", data);
+        if (Array.isArray(data?.ui_logs)) {
+          console.log("📋 update_meta ui_logs:\n" + data.ui_logs.join("\n"));
+        }
+        if (!data?.success) {
+          const backendMsg = data?.msg || 'Backend save failed';
+          const logs = Array.isArray(data?.ui_logs) ? `\n${data.ui_logs.join('\n')}` : '';
+          showWarningMessage();
+          setDynamicMessage('warning', `<div class="warning-message"><i class="fas fa-exclamation-triangle"></i><p>${backendMsg}</p><pre style="text-align:left;white-space:pre-wrap;font-size:12px;max-height:180px;overflow:auto;">${logs}</pre><button class="retry-btn" onclick="retryOnboarding()">Try Again</button></div>`);
+          return;
+        }
         // BACKEND SUCCESS -> show actual success div with all IDs
         showFinalSuccessMessage(waba_id, phone_number_id, business_id);
         backendSaveSuccess = true;
@@ -962,18 +900,19 @@
       }
     }
 
+
     function waitForAuthCodeAndSave(maxWaitMs = 6000) {
       const startedAt = Date.now();
 
       const trySave = () => {
         if (currentAuthCode) {
-          saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId, currentAuthCode);
+          saveToBackend(currentWabaId, currentPhoneNumberId, currentPageId, currentInstaId, currentBusinessId, currentAuthCode);
           return;
         }
 
         if (Date.now() - startedAt >= maxWaitMs) {
           // Continue without code for WhatsApp-only fallback
-          saveToBackend(currentWabaId, currentPhoneNumberId, currentBusinessId, '');
+          saveToBackend(currentWabaId, currentPhoneNumberId, currentPageId, currentInstaId, currentBusinessId, '');
           return;
         }
 
@@ -1008,9 +947,12 @@
 
       const waba_id = data.waba_id;
       const phone_number_id = data.phone_number_id;
+      const page_id = data.page_ids && data.page_ids.length > 0 ? data.page_ids[0] : null;
+      const insta_acc_id = data.instagram_account_ids && data.instagram_account_ids.length > 0 ? data.instagram_account_ids[0] : null;
       const business_id = data.business_id;
 
       console.log("✅ WhatsApp Embedded Signup FINISHED", data);
+      console.log("Extracted values:", { waba_id, phone_number_id, page_id, insta_acc_id, business_id });
 
       // If no waba_id, do NOT mark as completed; listener didn't get it (Android etc)
       if (!waba_id) {
@@ -1030,6 +972,8 @@
       // Store IDs
       currentWabaId = waba_id;
       currentPhoneNumberId = phone_number_id || '';
+	  currentPageId = page_id || '';
+	  currentInstaId = insta_acc_id || '';
       currentBusinessId = business_id || '';
 
       // Show waiting message (don't close tab) while saving to backend
